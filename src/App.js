@@ -23,9 +23,38 @@ function App() {
 
   const  handleMinusCount = (index)=>{
     const newTodos = [...todos]
-    newTodos[index].count = newTodos[index].count - 1
+    if(newTodos[index].count > 0){
+      newTodos[index].count = newTodos[index].count - 1
+    } else{
+      newTodos.splice(index,1)
+    }
 
     setTodos(newTodos);
+  }
+
+  const handleInputSubmit = (e) =>{
+    e.preventDefault()
+
+    if(!value){
+      alert('Please enter a value')
+      return
+    }
+
+    const addedTodos = [...todos, {
+      title: value,
+      count: 1
+    }]
+
+    setTodos(addedTodos);
+    setValue('');
+  }
+
+  const getTotalCount = () => {
+    const totalCount = todos.reduce((total, num) =>{
+      return total + num.count
+    }, 0)
+
+    return totalCount;
   }
 
   return (
@@ -36,7 +65,7 @@ function App() {
       </nav>
 
       <section className='container'>
-        <form className='form'>
+        <form className='form' onSubmit={handleInputSubmit}>
           <input className='input' type='text' placeholder='Input List'
             onChange={(e) => {
               setValue(e.target.value)
@@ -46,6 +75,19 @@ function App() {
           <button className='add-button' type='submit'>Add</button>
         </form>
 
+        <div className='info'>
+          <div className='info-total'>
+            <p>{`Total List : ${todos.length}`}</p>
+          </div>
+
+          <div className='info-total'>
+            <p>{`Total Count : ${getTotalCount()}`}</p>
+          </div>
+
+          <button onClick={() => setTodos([])} className='delete-all-button'>Delete All List</button>
+        </div>
+          
+
         {todos.length > 0 ? (
           <div className='todos'>
             {todos.map((todo,index, arr) => {
@@ -53,12 +95,12 @@ function App() {
                 <div key={index} className={`todo ${!(arr.length === index+1) && 'todo-divider'}`}>
                   {todo.title}
                   <div className='todo-icon-wrapper'>
-                    <button onClick={() => handlePlusCount(index)} className='todo-action-button'>
-                      <img src={plusIcon} alt='plus-icon'/>
-                    </button>
-                    <div className='todo-count'>{todo.count}</div>
                     <button onClick={() => handleMinusCount(index)} className='todo-action-button'>
                       <img src={minusIcon} alt='minus-icon'/>
+                    </button>
+                    <div className='todo-count'>{todo.count}</div>
+                    <button onClick={() => handlePlusCount(index)} className='todo-action-button'>
+                      <img src={plusIcon} alt='plus-icon'/>
                     </button>
                   </div>
                 </div>
