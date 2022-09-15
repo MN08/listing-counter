@@ -2,9 +2,11 @@ import { useState } from 'react';
 import classnames from 'classnames'
 
 import './App.css';
-import shoppingIcon from './assets/shopping-icon.svg'
 import plusIcon from './assets/plus-icon.svg'
 import minusIcon from './assets/minus-icon.svg'
+import Navbar from './components/Navbar';
+import Container from './components/Container';
+import SearchInput from './components/SearchInput';
 
 function App() {
   const [value, setValue] = useState('');
@@ -59,21 +61,13 @@ function App() {
 
   return (
     <>
-      <nav className='nav'>
-        <img className='nav-icon' src={shoppingIcon} alt="shopping Icon"/>
-        <h1 className='nav-title'>Listing Counter App</h1>
-      </nav>
-
-      <section className='container'>
-        <form className='form' onSubmit={handleInputSubmit}>
-          <input className='input' type='text' placeholder='Input List'
-            onChange={(e) => {
-              setValue(e.target.value)
-            }}
-            value = {value}
-          />
-          <button className='add-button' type='submit'>Add</button>
-        </form>
+      <Navbar/>
+      <Container>
+        <SearchInput
+          handleInputSubmit={handleInputSubmit}
+          onChange= {(e) =>{setValue(e.target.value)}}
+          value = {value}
+        />
 
         <div className='info'>
           <div className='info-total'>
@@ -108,7 +102,8 @@ function App() {
             })}
           </div>
         ) : <div>Kosong</div>}
-      </section>
+      </Container>
+      
     </>
   );
 }
