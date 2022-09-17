@@ -2,11 +2,12 @@ import { useState } from 'react';
 import classnames from 'classnames'
 
 import './App.css';
-import plusIcon from './assets/plus-icon.svg'
-import minusIcon from './assets/minus-icon.svg'
 import Navbar from './components/Navbar';
 import Container from './components/Container';
 import SearchInput from './components/SearchInput';
+import Info from './components/Info';
+import Todos from './components/Todos';
+import Empty from './components/Empty';
 
 function App() {
   const [value, setValue] = useState('');
@@ -69,39 +70,18 @@ function App() {
           value = {value}
         />
 
-        <div className='info'>
-          <div className='info-total'>
-            <p>{`Total List : ${todos.length}`}</p>
-          </div>
-
-          <div className='info-total'>
-            <p>{`Total Count : ${getTotalCount()}`}</p>
-          </div>
-
-          <button onClick={() => setTodos([])} className='delete-all-button'>Delete All List</button>
-        </div>
-          
-
+        <Info
+          todosLength={todos.length}
+          totalCount={getTotalCount()}
+          onDelete={() => setTodos([])}
+        />         
         {todos.length > 0 ? (
-          <div className='todos'>
-            {todos.map((todo,index, arr) => {
-              return(
-                <div key={index} className={`todo ${!(arr.length === index+1) && 'todo-divider'}`}>
-                  {todo.title}
-                  <div className='todo-icon-wrapper'>
-                    <button onClick={() => handleMinusCount(index)} className='todo-action-button'>
-                      <img src={minusIcon} alt='minus-icon'/>
-                    </button>
-                    <div className='todo-count'>{todo.count}</div>
-                    <button onClick={() => handlePlusCount(index)} className='todo-action-button'>
-                      <img src={plusIcon} alt='plus-icon'/>
-                    </button>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        ) : <div>Kosong</div>}
+        <Todos
+          todos={todos}
+          onSubstraction={(index) => handleMinusCount(index)}
+          onAddition={(index) => handlePlusCount(index)}
+        />
+        ) : <Empty/>}
       </Container>
       
     </>
